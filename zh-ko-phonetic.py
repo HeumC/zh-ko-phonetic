@@ -7,8 +7,7 @@ from korean_romanizer.romanizer import Romanizer
 # 页面基础配置
 st.set_page_config(page_title="汉字拼音 / 韩语罗马音速查", page_icon="🔤", layout="centered")
 
-st.title("语音标音 · 极速速查器")
-st.caption("无需回车，输入完成后停顿自动实时标音")
+st.title("汉字拼音 / 韩语罗马音速查")
 
 CUSTOM_KOREAN_MAP = {
     "김": "kim", "박": "park", "이": "lee", "최": "choi", "정": "jung",
