@@ -1,70 +1,33 @@
 import streamlit as st
 import re
+from st_keyup import st_keyup
 from pypinyin import pinyin, Style
 from korean_romanizer.romanizer import Romanizer
 
 # 页面基础配置
 st.set_page_config(page_title="汉字拼音 / 韩语罗马音速查", page_icon="🔤", layout="centered")
 
-st.title("汉字拼音 / 韩语罗马音速查")
-st.caption("输入中文➡输出拼音，输入韩文➡输出罗马音")
+st.title("语音标音 · 极速速查器")
+st.caption("无需回车，输入完成后停顿自动实时标音")
 
-# 韩国常用姓氏与高频音节习惯拼写法映射
 CUSTOM_KOREAN_MAP = {
-    "김": "kim",
-    "박": "park",
-    "이": "lee",
-    "최": "choi",
-    "정": "jung",
-    "강": "kang",
-    "조": "cho",
-    "윤": "yoon",
-    "장": "jang",
-    "임": "lim",
-    "한": "han",
-    "오": "oh",
-    "신": "shin",
-    "권": "kwon",
-    "황": "hwang",
-    "안": "ahn",
-    "송": "song",
-    "전": "jeon",
-    "홍": "hong",
-    "유": "yoo",
-    "고": "ko",
-    "문": "moon",
-    "양": "yang",
-    "손": "son",
-    "배": "bae",
-    "백": "baek",
-    "허": "huh",
-    "노": "noh",
-    "심": "shim",
-    "하": "ha",
-    "곽": "kwak",
-    "성": "sung",
-    "차": "cha",
-    "주": "joo",
-    "우": "woo",
-    "구": "koo",
-    "신": "shin",
-    "임": "lim",
-    "나": "na",
-    "민": "min",
-    "현": "hyun",
-    "원": "won",
+    "김": "kim", "박": "park", "이": "lee", "최": "choi", "정": "jung",
+    "강": "kang", "조": "cho", "윤": "yoon", "장": "jang", "임": "lim",
+    "한": "han", "오": "oh", "신": "shin", "권": "kwon", "황": "hwang",
+    "안": "ahn", "송": "song", "전": "jeon", "홍": "hong", "유": "yoo",
+    "고": "ko", "문": "moon", "양": "yang", "손": "son", "배": "bae",
+    "백": "baek", "허": "huh", "노": "noh", "심": "shim", "하": "ha",
+    "곽": "kwak", "성": "sung", "차": "cha", "주": "joo", "우": "woo",
+    "구": "koo", "나": "na", "민": "min", "현": "hyun", "원": "won",
 }
 
 def has_hangul(text: str) -> bool:
-    """检查是否包含韩文字符"""
     return bool(re.search(r'[\uac00-\ud7a3\u1100-\u11ff\u3130-\u318f]', text))
 
 def has_chinese(text: str) -> bool:
-    """检查是否包含汉字"""
     return bool(re.search(r'[\u4e00-\u9fa5]', text))
 
 def romanize_korean_spaced(text: str) -> str:
-    """逐字转为罗马音并用空格隔开，优先采用常用习惯拼写"""
     result = []
     for char in text:
         if char in CUSTOM_KOREAN_MAP:
@@ -75,8 +38,13 @@ def romanize_korean_spaced(text: str) -> str:
             result.append(char)
     return " ".join(result)
 
-# 单一输入框
-query = st.text_input("请输入汉字或韩语：", placeholder="例如：韩鑫哲 或 한흠철").strip()
+# 使用 keyup 输入框：debounce 为输入停止后的防抖延时（毫秒）
+query = st_keyup(
+    label="请输入汉字或韩语：", 
+    placeholder="例如：韩鑫哲 或 김태연",
+    debounce=300,  # 停顿 300 毫秒后自动触发更新
+    key="realtime_query"
+).strip()
 
 if query:
     is_ko = has_hangul(query)
