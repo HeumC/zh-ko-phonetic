@@ -1,3 +1,4 @@
 streamlit
 pypinyin
 korean-romanizer
+streamlit-keyup
