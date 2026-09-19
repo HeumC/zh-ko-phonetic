@@ -40,7 +40,7 @@ def romanize_korean_spaced(text: str) -> str:
 # 使用 keyup 输入框：debounce 为输入停止后的防抖延时（毫秒）
 query = st_keyup(
     label="请输入汉字或韩语：", 
-    placeholder="例如：韩鑫哲 或 김태연",
+    placeholder="例如：韩鑫哲 或 한흠철",
     debounce=300,  # 停顿 300 毫秒后自动触发更新
     key="realtime_query"
 ).strip()
